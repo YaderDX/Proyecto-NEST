@@ -7,6 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+model Tenant {
+  id    Int    @id @default(autoincrement())
+  name  String 
+  users User[] // Lado "1" de la relación
+}
+
+
 model User {
   id         Int      @id @default(autoincrement())
   email      String   @unique
@@ -16,7 +24,10 @@ model User {
   createAt   DateTime @default(now())
   updatedAt  DateTime @updatedAt
   role       Role     @default(USER)
+  tenantId   Int?
+  tenant     Tenant?  @relation(fields: [tenantId], references: [id])
 }
+
 
 enum Role {
   USER
